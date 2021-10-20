@@ -1,74 +1,82 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { ImageBackground, StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
+// Auth
 import { auth } from '../../firebase';
 // Firebase
 import firebase from 'firebase/app';
 
-
-export default function HomeScreen(props) {
+export default function SignUpScreen(props) {
   
   const navigation = useNavigation()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-
+  const [name, setName] = useState('')
+  
   useEffect(() => {
     }, [])
 
-  const handleLogin = () => {
-      auth
-      .signInWithEmailAndPassword(email, password)
-      .then(response => {
+  const handleSignUp = () => {
+    auth
+    .createUserWithEmailAndPassword(email, password)
+    .then(response => {
         const uid = response.user.uid
+        const data = {
+            id: uid,
+            email,
+            name,
+        };
         const usersRef = firebase.firestore().collection('users')
         usersRef
-            .doc(uid)
-            .get()
-            .then(firestoreDocument => {
-                if (!firestoreDocument.exists) {
-                    alert("User does not exist anymore.")
-                    return;
-                }
-                const user = firestoreDocument.data()
-                navigation.navigate('Home', {user: user})
-            })
-            .catch(error => {
-                alert(error)
-            });
+        .doc(uid)
+        .set(data)
+        .then(() => {
+            navigation.navigate('Home', {user: data})
+        })
+        .catch((error) => {
+            alert(error)
+        });
     })
     .catch(error => alert(error.message))
   }
 
   return ( 
     <ImageBackground style={styles.container} source={require('../assets/background.jpg')}>
-            <View 
-                style={styles.inputContainer}>
-                <TextInput 
-                    value={email}
-                    onChangeText={text => setEmail(text)}
-                    placeholder="Email"
-                    style = {styles.input} />
-                <TextInput 
-                    placeholder="Password"
-                    value={password}
-                    onChangeText={text => setPassword(text)}
-                    style = {styles.input}
-                    secureTextEntry />
-            </View>
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                     onPress={handleLogin}
-                    style={styles.button}>
-                    <Text
-                        style={styles.buttonText}>Login</Text>
-                </TouchableOpacity>
-            </View>
-
+        <View 
+            style={styles.inputContainer}>
+            <TextInput 
+                value={email}
+                onChangeText={text => setEmail(text)}
+                placeholder="Email"
+                style = {styles.input} 
+            />
+            <TextInput 
+                placeholder="Password"
+                value={password}
+                onChangeText={text => setPassword(text)}
+                style = {styles.input}
+                secureTextEntry 
+            />
+             <TextInput 
+                placeholder="Full Name"
+                value={name}
+                onChangeText={text => setName(text)}
+                style = {styles.input}
+            />
+        </View>
+        <View style={styles.buttonContainer}>
+            <TouchableOpacity
+                onPress={handleSignUp}
+                style={[styles.button, styles.buttonOutLine]}>
+                <Text
+                    style={styles.buttonOutLinetext}>
+                    Register
+                </Text>
+            </TouchableOpacity>
+        </View>
     </ImageBackground>
   );
-  
 }
-
 const styles = StyleSheet.create ({
     container: {    
         flex: 1,

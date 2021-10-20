@@ -8,11 +8,16 @@
     "eject": "expo eject"
   },
   "dependencies": {
-    "@react-native-firebase/app": "^12.9.1",
+    "@google-cloud/storage": "^5.15.3",
+    "@react-native-firebase/app": "^12.9.2",
+    "@react-native-firebase/storage": "^12.9.2",
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/native-stack": "^6.2.4",
     "expo": "~42.0.1",
+    "expo-google-sign-in": "~9.2.1",
+    "expo-image-picker": "~10.2.2",
     "expo-status-bar": "~1.0.4",
+    "fi": "^0.0.5",
     "firebase": "^8.10.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
